@@ -2,10 +2,18 @@ package main
 
 import (
 	"fmt"
-	"github.com/Babahasko/go-jwt-auth/configs"
+	"net/http"
+	"github.com/Babahasko/go-jwt-auth/internal/auth"
 )
 
 func main() {
-	conf := configs.LoadConfig()
-	fmt.Println(conf)
+	router := http.NewServeMux()
+	auth.NewAuthHandler(router)
+
+	server := http.Server{
+		Addr: ":8081",
+		Handler: router,
+	}
+	fmt.Println("Listen and serve :8081")
+	server.ListenAndServe()
 }
