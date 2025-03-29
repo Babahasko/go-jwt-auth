@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+
 	"github.com/Babahasko/go-jwt-auth/internal/auth"
 )
 
@@ -15,5 +17,5 @@ func main() {
 		Handler: router,
 	}
 	fmt.Println("Listen and serve :8081")
-	server.ListenAndServe()
+	log.Fatal(server.ListenAndServe())
 }
