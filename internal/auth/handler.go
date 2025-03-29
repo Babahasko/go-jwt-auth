@@ -25,7 +25,6 @@ func NewAuthHandler(router *http.ServeMux, deps *AuthHandlerDeps) {
 
 func (handler *AuthHandler) Login() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println(handler.Config.Auth.Secret)
 		fmt.Println("hello")
 	}
 }
