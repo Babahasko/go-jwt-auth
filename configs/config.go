@@ -8,10 +8,14 @@ import (
 
 type Config struct{
 	DB DbConfig
+	Auth AuthConfig
 }
 
 type DbConfig struct {
 	DbFile string
+}
+type AuthConfig struct {
+	Secret string
 }
 
 func LoadConfig() *Config {
@@ -21,7 +25,10 @@ func LoadConfig() *Config {
 	}
 	return &Config {
 		DB: DbConfig {
-			DbFile: os.Getenv("DbFile"),
+			DbFile: os.Getenv("DB_FILE"),
+		},
+		Auth: AuthConfig{
+			Secret: os.Getenv("SECRET"),
 		},
 	}
 }
