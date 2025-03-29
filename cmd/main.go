@@ -5,12 +5,18 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Babahasko/go-jwt-auth/configs"
 	"github.com/Babahasko/go-jwt-auth/internal/auth"
 )
 
 func main() {
 	router := http.NewServeMux()
-	auth.NewAuthHandler(router)
+	conf := configs.LoadConfig()
+	
+	//Handler
+	auth.NewAuthHandler(router, &auth.AuthHandlerDeps{
+		Config: conf,
+	})
 
 	server := http.Server{
 		Addr: ":8081",
