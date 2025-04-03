@@ -14,3 +14,7 @@ type RegisterRequest struct {
 	Name string `json:"name"`
 	Password string `json:"password" validate:"required,password"`
 }
+
+type RegisterResponse struct {
+	Token string `json:"token" validate:"required"`
+}

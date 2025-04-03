@@ -40,11 +40,14 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 
 func (handler *AuthHandler) Register() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		request, err := req.HandleBody[RegisterRequest](w,r)
+		_, err := req.HandleBody[RegisterRequest](w,r)
 		if err != nil {
 			res.Json(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		res.Json(w, request, http.StatusCreated)
+		data := RegisterResponse{
+			Token: "123",
+		}
+		res.Json(w, data, http.StatusCreated)
 	}
 }
