@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/Babahasko/go-jwt-auth/configs"
@@ -41,6 +40,11 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 
 func (handler *AuthHandler) Register() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("register")
+		request, err := req.HandleBody[RegisterRequest](w,r)
+		if err != nil {
+			res.Json(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		res.Json(w, request, http.StatusCreated)
 	}
 }
