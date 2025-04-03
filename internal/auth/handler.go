@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/Babahasko/go-jwt-auth/configs"
+	"github.com/Babahasko/go-jwt-auth/pkg/req"
 	"github.com/Babahasko/go-jwt-auth/pkg/res"
 )
 
@@ -26,11 +27,15 @@ func NewAuthHandler(router *http.ServeMux, deps *AuthHandlerDeps) {
 
 func (handler *AuthHandler) Login() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("hello")
+		_, err := req.HandleBody[LoginRequest](w,r)
+		if err != nil {
+			res.Json(w, err.Error(), http.StatusBadRequest)
+			return
+		}
 		data := LoginResponse{
 			Token: "123",
 		}
-		res.Json(w, data, 200)
+		res.Json(w, data, http.StatusOK)
 	}	
 }
 
