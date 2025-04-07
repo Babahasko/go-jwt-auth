@@ -8,6 +8,7 @@ import (
 	"github.com/Babahasko/go-jwt-auth/configs"
 	"github.com/Babahasko/go-jwt-auth/internal/auth"
 	"github.com/Babahasko/go-jwt-auth/pkg/db"
+	"github.com/Babahasko/go-jwt-auth/pkg/middleware"
 )
 
 func main() {
@@ -24,7 +25,7 @@ func main() {
 
 	server := http.Server{
 		Addr: ":8081",
-		Handler: router,
+		Handler: middleware.Logging(router),
 	}
 	fmt.Println("Listen and serve :8081")
 	log.Fatal(server.ListenAndServe())
