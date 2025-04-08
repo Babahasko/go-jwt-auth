@@ -25,7 +25,7 @@ func main() {
 
 	server := http.Server{
 		Addr: ":8081",
-		Handler: middleware.Logging(router),
+		Handler: middleware.CORS(middleware.Logging(router)),
 	}
 	fmt.Println("Listen and serve :8081")
 	log.Fatal(server.ListenAndServe())
