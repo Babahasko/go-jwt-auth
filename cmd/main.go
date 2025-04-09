@@ -22,10 +22,15 @@ func main() {
 	auth.NewAuthHandler(router, &auth.AuthHandlerDeps{
 		Config: conf,
 	})
+	// stack Middleware
+	stack := middleware.Chain(
+		middleware.CORS,
+		middleware.Logging,
+	)
 
 	server := http.Server{
 		Addr: ":8081",
-		Handler: middleware.CORS(middleware.Logging(router)),
+		Handler: stack(router),
 	}
 	fmt.Println("Listen and serve :8081")
 	log.Fatal(server.ListenAndServe())
