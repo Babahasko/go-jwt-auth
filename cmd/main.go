@@ -7,6 +7,7 @@ import (
 
 	"github.com/Babahasko/go-jwt-auth/configs"
 	"github.com/Babahasko/go-jwt-auth/internal/auth"
+	"github.com/Babahasko/go-jwt-auth/internal/say"
 	"github.com/Babahasko/go-jwt-auth/pkg/db"
 	"github.com/Babahasko/go-jwt-auth/pkg/middleware"
 )
@@ -22,6 +23,9 @@ func main() {
 	auth.NewAuthHandler(router, &auth.AuthHandlerDeps{
 		Config: conf,
 	})
+
+	say.NewSayHandler(router)
+	
 	// stack Middleware
 	stack := middleware.Chain(
 		middleware.CORS,
