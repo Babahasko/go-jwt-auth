@@ -22,7 +22,6 @@ func NewAuthHandler(router *http.ServeMux, deps *AuthHandlerDeps) {
 	}
 	router.HandleFunc("POST /auth/login", handler.Login())
 	router.HandleFunc("POST /auth/register", handler.Register())
-	router.HandleFunc("GET /auth/hello", handler.Hello())
 }
 
 func (handler *AuthHandler) Login() http.HandlerFunc {
@@ -50,11 +49,5 @@ func (handler *AuthHandler) Register() http.HandlerFunc {
 			Token: "123",
 		}
 		res.Json(w, data, http.StatusCreated)
-	}
-}
-
-func (handler *AuthHandler) Hello() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		res.Json(w, "Hello", http.StatusOK)
 	}
 }
