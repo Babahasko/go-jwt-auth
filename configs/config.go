@@ -14,6 +14,7 @@ type Config struct{
 type DbConfig struct {
 	DbFile string
 }
+
 type AuthConfig struct {
 	Secret string
 }
