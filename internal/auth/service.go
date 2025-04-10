@@ -5,6 +5,7 @@ import (
 
 	"github.com/Babahasko/go-jwt-auth/internal/user"
 	"github.com/Babahasko/go-jwt-auth/pkg/di"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type AuthService struct {
@@ -27,11 +28,17 @@ func (service *AuthService) Register(email, password, name string) (string, erro
 	if existed_user != nil {
 		return "", errors.New(ErrorUserExist)
 	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	
+	if err != nil {
+		return "", err
+	}
 	
 	user := &user.User{
 		Email:    email,
 		Name:     name,
-		Password: "",
+		Password: string(hashedPassword),
 	}
 
 	result, err := service.UserRepository.Create(user)
