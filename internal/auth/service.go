@@ -18,7 +18,11 @@ func NewAuthService(userRepository di.IUserRepository) *AuthService {
 }
 
 func (service *AuthService) Register(email, password, name string) (string, error) {
-	existed_user, _ := service.UserRepository.GetByEmail(email)
+	existed_user, err := service.UserRepository.GetByEmail(email)
+	
+	if err != nil {
+		return "", err
+	}
 
 	if existed_user != nil {
 		return "", errors.New(ErrorUserExist)
