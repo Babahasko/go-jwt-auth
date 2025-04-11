@@ -2,7 +2,9 @@ package auth
 
 import (
 	"net/http"
+
 	"github.com/Babahasko/go-jwt-auth/configs"
+	"github.com/Babahasko/go-jwt-auth/pkg/jwt"
 	"github.com/Babahasko/go-jwt-auth/pkg/req"
 	"github.com/Babahasko/go-jwt-auth/pkg/res"
 )
@@ -35,10 +37,20 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 		}
 		email, err := handler.AuthService.Login(body.Email, body.Password)
 		if err != nil {
-			res.Json(w, err.Error(), http.StatusUnauthorized)
+			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
-		res.Json(w, email, http.StatusOK)
+
+		j := jwt.NewJWT(handler.Config.Auth.PrivateKeyFile, handler.Config.Auth.PublicKeyFile)
+		token, err := j.Create(email)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		loginResponseBody := &LoginResponse{
+			Token: token,
+		}
+		res.Json(w, loginResponseBody, http.StatusOK)
 	}
 }
 
@@ -46,14 +58,27 @@ func (handler *AuthHandler) Register() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		body, err := req.HandleBody[RegisterRequest](w, r)
 		if err != nil {
-			res.Json(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 		email, err := handler.AuthService.Register(body.Email, body.Password, body.Name)
 		if err != nil {
-			res.Json(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		res.Json(w, email, http.StatusCreated)
+
+		j := jwt.NewJWT(handler.Config.Auth.PrivateKeyFile, handler.Config.Auth.PublicKeyFile)
+		token, err := j.Create(email)
+		
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		responseBody := &RegisterResponse{
+			Token: token,
+		}
+
+		res.Json(w, responseBody, http.StatusCreated)
 	}
 }
