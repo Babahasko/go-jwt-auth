@@ -16,8 +16,8 @@ type DbConfig struct {
 }
 
 type AuthConfig struct {
-	privateKeyFile string
-	publicKeyFile string
+	PrivateKeyFile string
+	PublicKeyFile string
 
 }
 
@@ -31,8 +31,8 @@ func LoadConfig() *Config {
 			DbFile: os.Getenv("DB_FILE"),
 		},
 		Auth: AuthConfig{
-			privateKeyFile: os.Getenv("PRIVATE_KEY"),
-			publicKeyFile: os.Getenv("PUBLIC_KEY"),
+			PrivateKeyFile: os.Getenv("PRIVATE_KEY"),
+			PublicKeyFile: os.Getenv("PUBLIC_KEY"),
 		},
 	}
 }
