@@ -28,15 +28,17 @@ func NewAuthHandler(router *http.ServeMux, deps *AuthHandlerDeps) {
 
 func (handler *AuthHandler) Login() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		_, err := req.HandleBody[LoginRequest](w, r)
+		body, err := req.HandleBody[LoginRequest](w, r)
 		if err != nil {
 			res.Json(w, err.Error(), http.StatusBadRequest)
 			return
 		}
-		data := LoginResponse{
-			Token: "123",
+		email, err := handler.AuthService.Login(body.Email, body.Password)
+		if err != nil {
+			res.Json(w, err.Error(), http.StatusUnauthorized)
+			return
 		}
-		res.Json(w, data, http.StatusOK)
+		res.Json(w, email, http.StatusOK)
 	}
 }
 
