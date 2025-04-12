@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	"fmt"
+	"context"
 	"net/http"
 	"strings"
 
@@ -9,16 +9,32 @@ import (
 	"github.com/Babahasko/go-jwt-auth/pkg/jwt"
 )
 
+type key string
+
+const (
+	ContextEmailKey key = "ContextEmailKey"
+)
+
 func IsAuthed(next http.Handler, conf *configs.Config) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("Authorization")
-		token := strings.TrimPrefix(authHeader, "Bearer ")
-		payload, err := jwt.NewJWT(conf.Auth.PrivateKeyFile, conf.Auth.PublicKeyFile).Parse(token)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusUnauthorized)
+		if !strings.HasPrefix(authHeader, "Bearer ") {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
-		fmt.Println(payload)
-		next.ServeHTTP(w, r)
+
+		token := strings.TrimPrefix(authHeader, "Bearer ")
+		jwtPayload, err := jwt.NewJWT(conf.Auth.PrivateKeyFile, conf.Auth.PublicKeyFile).Parse(token)
+		
+		if err != nil {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		r.Context()
+		ctx := context.WithValue(r.Context(), ContextEmailKey, jwtPayload.Email)
+		rWithCotext := r.WithContext(ctx)
+
+		next.ServeHTTP(w, rWithCotext)
 	})
 }
