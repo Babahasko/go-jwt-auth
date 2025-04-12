@@ -3,18 +3,21 @@ package say
 import (
 	"net/http"
 
+	"github.com/Babahasko/go-jwt-auth/configs"
 	"github.com/Babahasko/go-jwt-auth/pkg/middleware"
 	"github.com/Babahasko/go-jwt-auth/pkg/res"
 )
 
+type SayHandlerDeps struct{
+	Config *configs.Config
+}
+
 type SayHandler struct {
 }
 
-func NewSayHandler(router *http.ServeMux) {
-	handler := &SayHandler{
-
-	}
-	router.Handle("GET /say/hello", middleware.IsAuthed(handler.Hi()))
+func NewSayHandler(router *http.ServeMux, deps *SayHandlerDeps) {
+	handler := &SayHandler{}
+	router.Handle("GET /say/hello", middleware.IsAuthed(handler.Hi(),deps.Config))
 	router.HandleFunc("GET /say/bye", handler.Bye())
 }
 
