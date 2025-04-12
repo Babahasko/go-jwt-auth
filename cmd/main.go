@@ -32,7 +32,9 @@ func main() {
 		AuthService: authService,
 	})
 
-	say.NewSayHandler(router)
+	say.NewSayHandler(router, &say.SayHandlerDeps{
+		Config: conf,
+	})
 	
 	// stack Middleware
 	stack := middleware.Chain(
