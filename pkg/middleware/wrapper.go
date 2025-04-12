@@ -9,5 +9,5 @@ type WrapperWriter struct {
 
 func(w *WrapperWriter) WriteHeader(statusCode int) {
 	w.ResponseWriter.WriteHeader(statusCode)
-	// w.StatusCode = statusCode
+	w.StatusCode = statusCode
 } 
