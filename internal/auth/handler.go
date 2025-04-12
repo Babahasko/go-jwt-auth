@@ -32,7 +32,7 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		body, err := req.HandleBody[LoginRequest](w, r)
 		if err != nil {
-			res.Json(w, err.Error(), http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 		email, err := handler.AuthService.Login(body.Email, body.Password)
