@@ -42,11 +42,14 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 		}
 
 		j := jwt.NewJWT(handler.Config.Auth.PrivateKeyFile, handler.Config.Auth.PublicKeyFile)
-		token, err := j.Create(email)
+
+		token, err := j.Create(jwt.JWTData{Email: email,})
+
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		
 		loginResponseBody := &LoginResponse{
 			Token: token,
 		}
@@ -68,7 +71,7 @@ func (handler *AuthHandler) Register() http.HandlerFunc {
 		}
 
 		j := jwt.NewJWT(handler.Config.Auth.PrivateKeyFile, handler.Config.Auth.PublicKeyFile)
-		token, err := j.Create(email)
+		token, err := j.Create(jwt.JWTData{Email: email,})
 		
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
