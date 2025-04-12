@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/Babahasko/go-jwt-auth/configs"
-	"github.com/Babahasko/go-jwt-auth/pkg/jwt"
+	"github.com/Babahasko/go-jwt-auth/pkg/jwt_helper"
 )
 
 type key string
@@ -24,7 +24,7 @@ func IsAuthed(next http.Handler, conf *configs.Config) http.Handler {
 		}
 
 		token := strings.TrimPrefix(authHeader, "Bearer ")
-		jwtPayload, err := jwt.NewJWT(conf.Auth.PrivateKeyFile, conf.Auth.PublicKeyFile).Parse(token)
+		jwtPayload, err := jwt_helper.NewJWT(conf.Auth.PrivateKeyFile, conf.Auth.PublicKeyFile).Parse(token)
 		
 		if err != nil {
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)

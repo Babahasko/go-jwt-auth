@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/Babahasko/go-jwt-auth/configs"
-	"github.com/Babahasko/go-jwt-auth/pkg/jwt"
+	"github.com/Babahasko/go-jwt-auth/pkg/jwt_helper"
 	"github.com/Babahasko/go-jwt-auth/pkg/req"
 	"github.com/Babahasko/go-jwt-auth/pkg/res"
 )
@@ -41,9 +41,9 @@ func (handler *AuthHandler) Login() http.HandlerFunc {
 			return
 		}
 
-		j := jwt.NewJWT(handler.Config.Auth.PrivateKeyFile, handler.Config.Auth.PublicKeyFile)
+		j := jwt_helper.NewJWT(handler.Config.Auth.PrivateKeyFile, handler.Config.Auth.PublicKeyFile)
 
-		token, err := j.Create(jwt.JWTData{Email: email,})
+		token, err := j.Create(jwt_helper.JWTData{Email: email,})
 
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -70,8 +70,8 @@ func (handler *AuthHandler) Register() http.HandlerFunc {
 			return
 		}
 
-		j := jwt.NewJWT(handler.Config.Auth.PrivateKeyFile, handler.Config.Auth.PublicKeyFile)
-		token, err := j.Create(jwt.JWTData{Email: email,})
+		j := jwt_helper.NewJWT(handler.Config.Auth.PrivateKeyFile, handler.Config.Auth.PublicKeyFile)
+		token, err := j.Create(jwt_helper.JWTData{Email: email,})
 		
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
