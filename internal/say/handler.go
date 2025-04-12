@@ -1,6 +1,7 @@
 package say
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Babahasko/go-jwt-auth/configs"
@@ -23,7 +24,9 @@ func NewSayHandler(router *http.ServeMux, deps *SayHandlerDeps) {
 
 func (handler *SayHandler) Hi() http.HandlerFunc{
 	return func(w http.ResponseWriter, r *http.Request) {
-		res.Json(w, "Oh. Hi!", http.StatusOK)
+		contextPayload, _ := r.Context().Value(middleware.ContextEmailKey).(string)
+		resultString := fmt.Sprintf("Oh Hi! %v", contextPayload)
+		res.Json(w, resultString, http.StatusOK)
 	}
 }
 
